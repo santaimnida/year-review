@@ -400,6 +400,7 @@
     });
     document.getElementById('signInBtn').addEventListener('click', ()=> google.accounts.id.prompt());
     updateAuthUI();
+    google.accounts.id.prompt(); // try a silent auto sign-in on load if a session already exists
   }
 
   function applyTheme(y){
