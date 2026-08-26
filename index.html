@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>그 돈으로 뭘 했냐면요</title>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <link rel="preconnect" href="https://statics.goorm.io" crossorigin>
 <link rel="stylesheet" href="https://statics.goorm.io/fonts/GoormSansCode/v1.0.1/GoormSansCode.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/D2Coding/D2Coding.css">
@@ -16,7 +15,6 @@
     --ink-dim:rgba(28,27,25,0.5);
     --ink-faint:rgba(28,27,25,0.28);
     --accent-deep:#0E86C8;
-    --accent: color-mix(in srgb, var(--accent-deep) 28%, white);
 
     --fs-ui:11px;
     --fs-primary:12px;
@@ -50,13 +48,6 @@
   @media (prefers-reduced-motion: reduce){.cursor{animation:none;}}
   @keyframes blink{50%{opacity:0;}}
 
-  .auth-row{font-size:var(--fs-note);color:var(--ink-dim);text-align:right;margin-bottom:10px;}
-  .auth-link{
-    background:none;border:none;font-family:inherit;font-size:var(--fs-note);
-    color:var(--ink-dim);text-decoration:underline;cursor:pointer;padding:2px 0;
-  }
-  .auth-link:hover{color:var(--ink);}
-
   /* year tabs */
   .nav{
     display:flex;
@@ -64,7 +55,7 @@
     font-size:var(--fs-ui);
     flex-wrap:wrap;
     align-items:baseline;
-    margin-bottom:6px;
+    margin-bottom:22px;
   }
   .tab{
     background:none;
@@ -83,27 +74,15 @@
     text-underline-offset:3px;
   }
   .tab:focus-visible{outline:1px solid var(--ink);outline-offset:2px;}
-  .tab-plus{
-    background:none;
-    border:none;
-    font-family:inherit;
-    font-size:var(--fs-ui);
-    color:var(--ink);
-    cursor:pointer;
-    padding:2px 0;
-  }
-  .tab-plus:focus-visible{outline:1px solid var(--ink);outline-offset:2px;}
   .nav-empty{font-size:var(--fs-ui);color:var(--ink-dim);}
 
-  #slot-year{margin-bottom:22px;}
   #loadingMsg{font-size:var(--fs-ui);color:var(--ink-dim);}
 
   body.loading{background:#ffffff;}
   body.loading,
   body.loading .terminal-intro,
   body.loading .t-info,
-  body.loading .t-prompt,
-  body.loading .auth-row{color:#4a4a4a;}
+  body.loading .t-prompt{color:#4a4a4a;}
   body.loading .cursor{background:#4a4a4a;}
   body.loading #loadingMsg{color:#000000;}
 
@@ -122,30 +101,10 @@
     white-space:nowrap;
     font-size:var(--fs-ui);
   }
-  .sec-head .meta{
-    display:flex;
-    align-items:baseline;
-    white-space:nowrap;
-  }
   .sec-head .count{
     font-size:var(--fs-note);
     color:var(--ink-dim);
   }
-  .sec-head .slash{
-    font-size:var(--fs-note);
-    color:var(--ink-faint);
-    padding:0 5px;
-  }
-  .cat-plus{
-    background:none;
-    border:none;
-    font-family:inherit;
-    font-size:var(--fs-note);
-    color:var(--ink);
-    cursor:pointer;
-    padding:0;
-  }
-  .cat-plus:focus-visible{outline:1px solid var(--ink);outline-offset:2px;}
 
   .entry{
     display:flex;
@@ -171,80 +130,6 @@
   .entry .sep{color:var(--ink-faint);padding:0 6px;}
   .entry .secondary{font-weight:400;}
   .entry .note{font-size:var(--fs-note);color:var(--ink-dim);}
-  .del{
-    font-size:var(--fs-note);
-    color:var(--ink-dim);
-    background:none;
-    border:none;
-    font-family:inherit;
-    cursor:pointer;
-    padding:0;
-    flex-shrink:0;
-  }
-  .del:hover{color:var(--ink);}
-  .del:focus-visible{color:var(--ink);outline:1px solid var(--ink);}
-
-  .edit-body{
-    display:flex;
-    align-items:baseline;
-    flex-wrap:wrap;
-    gap:2px;
-    flex:1;
-    min-width:0;
-  }
-  .inline-input{
-    background:none;
-    border:none;
-    border-bottom:1px dashed var(--ink-faint);
-    font-family:inherit;
-    font-size:var(--fs-primary);
-    color:var(--ink);
-    padding:1px 2px;
-    flex:1;
-    min-width:60px;
-  }
-  .inline-input::placeholder{color:var(--ink-faint);}
-  .inline-input:focus{outline:none;border-bottom:1px solid var(--ink);}
-  .add-row-inline{padding:4px 0;}
-
-  .add-panel{
-    margin-top:8px;
-    padding:14px;
-    background:var(--accent);
-    border:1px solid var(--ink);
-    display:grid;
-    gap:9px;
-    max-width:480px;
-  }
-  .field{display:flex;flex-direction:column;gap:3px;}
-  .field label{font-size:var(--fs-note);letter-spacing:0.02em;}
-  .field input{
-    background:var(--panel);
-    border:1px solid var(--ink);
-    padding:6px 8px;
-    color:var(--ink);
-    font-family:inherit;
-    font-size:var(--fs-ui);
-  }
-  .color-field{display:flex;gap:6px;align-items:stretch;}
-  .color-field input[type="color"]{width:34px;padding:2px;cursor:pointer;flex-shrink:0;}
-  .color-field input[type="text"]{flex:1;min-width:0;text-transform:uppercase;}
-  .field input[type="color"]{height:30px;padding:2px;cursor:pointer;}
-  .field input:focus-visible{outline:2px solid var(--ink);outline-offset:0;}
-  .panel-actions{display:flex;gap:8px;margin-top:2px;}
-  .btn{
-    font-family:inherit;
-    font-size:var(--fs-ui);
-    padding:5px 12px;
-    cursor:pointer;
-    border:1px solid var(--ink);
-    background:var(--panel);
-    color:var(--ink);
-  }
-  .btn.save{background:var(--ink);color:var(--panel);}
-  .btn.save:hover{background:transparent;color:var(--ink);}
-  .btn.cancel:hover{background:var(--ink);color:var(--panel);}
-  .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
 
   footer{
     margin-top:48px;
@@ -261,11 +146,6 @@
 <body class="loading">
 <div class="page">
 
-  <div class="auth-row" id="authRow">
-    <button class="auth-link" id="signInBtn" type="button">sign in</button>
-    <span id="authStatus" style="display:none;"></span>
-  </div>
-
   <div class="masthead">
     <div class="terminal-intro">
       <div class="t-line t-cmd">&gt; run year_review</div>
@@ -280,8 +160,6 @@
 
   <div id="loadingMsg">loading...</div>
   <div class="nav" id="nav" style="display:none;"></div>
-  <div id="slot-year"></div>
-  <div id="slot-theme"></div>
 
   <div id="years-container"></div>
 
@@ -291,18 +169,13 @@
 
 <script>
 (function(){
-  // ===== CONFIG — 이 두 값만 채워주세요 =====
-  const GOOGLE_CLIENT_ID = '684731971670-h7ll7t50ok8mkvhn9fi4rg0d0hah3sjb.apps.googleusercontent.com';
+  // ===== CONFIG =====
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzORQvAqexhIE1mskFPiYQVQY1y137iT5D5nyltsY1XALOEb1lRpbDuAErSCj1pcAgw/exec';
-  const OWNER_EMAIL = 'sepsanta@gmail.com';
+  const CACHE_KEY = 'yearly_recap_cache_v1';
 
   let data = { years: [] };
   let selectedYear = null;
-  let themeOpenFor = null;
-  let idToken = null;
-  let isOwner = false;
 
-  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
   function el(tag, cls, text){
     const e = document.createElement(tag);
     if(cls) e.className = cls;
@@ -323,201 +196,42 @@
     return d;
   }
 
-  // ===== backend =====
+  function showLoaded(){
+    document.getElementById('loadingMsg').style.display = 'none';
+    document.getElementById('nav').style.display = '';
+    document.body.classList.remove('loading');
+  }
+
   async function loadData(){
+    // show cached data instantly if we have it, then refresh quietly in the background
+    let hadCache = false;
+    try{
+      const cached = localStorage.getItem(CACHE_KEY);
+      if(cached){
+        data = normalize(JSON.parse(cached));
+        hadCache = true;
+        showLoaded();
+        renderAll();
+      }
+    } catch(e){ /* ignore cache errors */ }
+
     try{
       const res = await fetch(APPS_SCRIPT_URL, { method:'GET' });
       const json = await res.json();
       data = normalize(json);
+      try{ localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch(e){}
     } catch(e){
       console.error('load failed', e);
-      data = { years: [] };
+      if(!hadCache) data = { years: [] };
     }
-    document.getElementById('loadingMsg').style.display = 'none';
-    document.getElementById('nav').style.display = '';
-    document.body.classList.remove('loading');
+    showLoaded();
     renderAll();
-  }
-
-  async function saveData(){
-    try{
-      const res = await fetch(APPS_SCRIPT_URL, {
-        method:'POST',
-        headers: { 'Content-Type':'text/plain;charset=utf-8' }, // avoids a CORS preflight against Apps Script
-        body: JSON.stringify({ idToken, data }),
-      });
-      const result = await res.json();
-      if(!result.ok){
-        alert('Save failed (' + (result.error || 'unauthorized') + '). Try signing in again.');
-      }
-    } catch(e){
-      console.error('save failed', e);
-      alert('Save failed — check your connection.');
-    }
-  }
-
-  // ===== auth =====
-  function decodeJwt(token){
-    try{
-      const payload = token.split('.')[1];
-      const json = decodeURIComponent(
-        atob(payload.replace(/-/g,'+').replace(/_/g,'/'))
-          .split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
-      );
-      return JSON.parse(json);
-    } catch(e){ return null; }
-  }
-
-  function handleCredential(response){
-    idToken = response.credential;
-    const payload = decodeJwt(idToken);
-    isOwner = !!(payload && payload.email === OWNER_EMAIL && payload.email_verified);
-    updateAuthUI();
-    renderAll();
-  }
-
-  function signOut(){
-    idToken = null;
-    isOwner = false;
-    if(window.google && google.accounts) google.accounts.id.disableAutoSelect();
-    updateAuthUI();
-    renderAll();
-  }
-
-  function updateAuthUI(){
-    const signInBtn = document.getElementById('signInBtn');
-    const status = document.getElementById('authStatus');
-    if(isOwner){
-      signInBtn.style.display = 'none';
-      status.style.display = 'inline';
-      status.innerHTML = '';
-      const out = el('button','auth-link','sign out');
-      out.type = 'button';
-      out.addEventListener('click', signOut);
-      status.appendChild(out);
-    } else {
-      status.style.display = 'none';
-      signInBtn.style.display = 'inline';
-    }
-  }
-
-  function initGoogleAuth(){
-    if(!window.google || !google.accounts){ setTimeout(initGoogleAuth, 300); return; }
-    google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: handleCredential,
-      auto_select: true,
-    });
-    document.getElementById('signInBtn').addEventListener('click', ()=> google.accounts.id.prompt());
-    updateAuthUI();
-    google.accounts.id.prompt(); // try a silent auto sign-in on load if a session already exists
   }
 
   function applyTheme(y){
     const root = document.documentElement;
     root.style.setProperty('--bg', (y && y.bg) || '#F0EEE9');
     root.style.setProperty('--accent-deep', (y && y.point) || '#0E86C8');
-  }
-
-  function isValidHex(v){ return /^#[0-9a-fA-F]{6}$/.test(v); }
-
-  function buildForm(fieldsSpec, onSave, onCancel, initialValues, cancelLabel){
-    const form = el('div','add-panel');
-    const inputs = {};
-    fieldsSpec.forEach(spec=>{
-      const f = el('div','field');
-      f.appendChild(el('label', null, spec.label));
-
-      if(spec.type === 'color'){
-        const wrap = el('div','color-field');
-        const initial = (initialValues && isValidHex(initialValues[spec.key])) ? initialValues[spec.key] : '#000000';
-        const swatch = document.createElement('input');
-        swatch.type = 'color';
-        swatch.value = initial;
-        const text = document.createElement('input');
-        text.type = 'text';
-        text.placeholder = '#RRGGBB';
-        text.maxLength = 7;
-        text.value = initial;
-        swatch.addEventListener('input', ()=>{ text.value = swatch.value.toUpperCase(); });
-        text.addEventListener('input', ()=>{
-          let v = text.value.trim();
-          if(v && v[0] !== '#') v = '#' + v;
-          if(isValidHex(v)) swatch.value = v;
-        });
-        wrap.appendChild(swatch);
-        wrap.appendChild(text);
-        f.appendChild(wrap);
-        form.appendChild(f);
-        inputs[spec.key] = text;
-        return;
-      }
-
-      const input = el('input');
-      input.type = spec.type || 'text';
-      if(initialValues && initialValues[spec.key] !== undefined){
-        input.value = initialValues[spec.key];
-      }
-      f.appendChild(input);
-      form.appendChild(f);
-      inputs[spec.key] = input;
-    });
-    const actions = el('div','panel-actions');
-    const saveBtn = el('button','btn save','SAVE'); saveBtn.type='button';
-    const cancelBtn = el('button','btn cancel', cancelLabel || 'CANCEL'); cancelBtn.type='button';
-    actions.appendChild(saveBtn); actions.appendChild(cancelBtn);
-    form.appendChild(actions);
-
-    saveBtn.addEventListener('click', ()=>{
-      const vals = {};
-      let missing = null;
-      fieldsSpec.forEach(spec=>{
-        let v = inputs[spec.key].value.trim();
-        if(spec.type === 'color'){
-          if(v && v[0] !== '#') v = '#' + v;
-          if(!isValidHex(v)) v = '';
-        }
-        vals[spec.key] = v;
-        if(spec.required && !vals[spec.key] && !missing) missing = spec.key;
-      });
-      if(missing){ inputs[missing].focus(); return; }
-      onSave(vals);
-    });
-    cancelBtn.addEventListener('click', onCancel);
-    setTimeout(()=>{ const f = form.querySelector('input[type="text"]'); if(f) f.focus(); }, 0);
-    return form;
-  }
-
-  function attachAddControl(trigger, formSlot, fieldsSpec, onSave, initialValues){
-    let open = false;
-    trigger.addEventListener('click', ()=>{
-      if(open){ open = false; formSlot.innerHTML = ''; return; }
-      open = true;
-      const form = buildForm(fieldsSpec, async (vals)=>{ await onSave(vals); }, ()=>{
-        open = false; formSlot.innerHTML = '';
-      }, initialValues);
-      formSlot.innerHTML = '';
-      formSlot.appendChild(form);
-    });
-  }
-
-  function openThemeEditor(y){
-    const slot = document.getElementById('slot-theme');
-    if(themeOpenFor === y.year){ themeOpenFor = null; slot.innerHTML = ''; return; }
-    themeOpenFor = y.year;
-    const form = buildForm([
-      {key:'bg', label:'BG COLOR', type:'color'},
-      {key:'point', label:'POINT COLOR', type:'color'},
-    ], (vals)=>{
-      if(vals.bg) y.bg = vals.bg;
-      if(vals.point) y.point = vals.point;
-      themeOpenFor = null;
-      slot.innerHTML = '';
-      renderAll();
-      saveData();
-    }, ()=>{ themeOpenFor = null; slot.innerHTML = ''; }, { bg:y.bg, point:y.point }, 'CLOSE');
-    slot.innerHTML = '';
-    slot.appendChild(form);
   }
 
   function joinParts(container, parts){
@@ -533,44 +247,12 @@
     }
   }
 
-  function makeViewRow(item, cat, idxLabel, parts){
+  function makeViewRow(idxLabel, parts){
     const row = el('div','entry');
     row.appendChild(el('div','idx', idxLabel));
     const body = el('div','body');
     joinParts(body, parts);
     row.appendChild(body);
-    return row;
-  }
-
-  function makeEditRow(item, cat, idxLabel, yearObj, countSpan, onChanged){
-    const row = el('div','entry edit-row');
-    row.appendChild(el('div','idx', idxLabel));
-    const body = el('div','body edit-body');
-    cat.formFields.forEach((spec, i)=>{
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.className = 'inline-input';
-      input.placeholder = spec.label;
-      input.value = item[spec.key] || '';
-      input.addEventListener('change', ()=>{
-        item[spec.key] = input.value.trim();
-        countSpan.textContent = cat.countLabel(yearObj[cat.key]);
-        saveData();
-      });
-      body.appendChild(input);
-      if(i < cat.formFields.length-1){
-        const isLast = (i === cat.formFields.length-2);
-        body.appendChild(el('span','sep', isLast ? '*' : '—'));
-      }
-    });
-    row.appendChild(body);
-    const del = el('button','del','[X]'); del.type='button';
-    del.addEventListener('click', ()=>{
-      yearObj[cat.key] = yearObj[cat.key].filter(x=>x.id!==item.id);
-      onChanged();
-      saveData();
-    });
-    row.appendChild(del);
     return row;
   }
 
@@ -586,11 +268,6 @@
           {cls:'note', text:item.note || ''},
         ],
       }),
-      formFields:[
-        {key:'artist', label:'ARTIST'},
-        {key:'title', label:'TITLE'},
-        {key:'note', label:'NOTE'},
-      ],
     },
     {
       key:'concerts', tag:'[02] CONCERTS',
@@ -606,12 +283,6 @@
           {cls:'note', text:item.note || ''},
         ],
       }),
-      formFields:[
-        {key:'date', label:'DATE (MM.DD)'},
-        {key:'title', label:'TITLE'},
-        {key:'artist', label:'ARTIST'},
-        {key:'note', label:'NOTE'},
-      ],
     },
     {
       key:'travels', tag:'[03] TRAVEL',
@@ -623,11 +294,6 @@
           {cls:'note', text:item.note || ''},
         ],
       }),
-      formFields:[
-        {key:'period', label:'PERIOD (MM.DD - MM.DD)'},
-        {key:'location', label:'LOCATION'},
-        {key:'note', label:'NOTE'},
-      ],
     },
   ];
 
@@ -635,65 +301,16 @@
     const wrap = el('div','category');
     const head = el('div','sec-head');
     head.appendChild(el('span','tag', cat.tag));
-
-    const meta = el('span','meta');
-    const countSpan = el('span','count');
-    meta.appendChild(countSpan);
-
-    let plusBtn = null;
-    if(isOwner){
-      meta.appendChild(el('span','slash','/'));
-      plusBtn = el('button','cat-plus','+'); plusBtn.type='button';
-      meta.appendChild(plusBtn);
-    }
-    head.appendChild(meta);
+    const countSpan = el('span','count', cat.countLabel(yearObj[cat.key]));
+    head.appendChild(countSpan);
     wrap.appendChild(head);
 
     const list = el('div','list');
+    yearObj[cat.key].forEach((item, idx)=>{
+      const rf = cat.rowFields(item, idx);
+      list.appendChild(makeViewRow(rf.idx, rf.parts));
+    });
     wrap.appendChild(list);
-
-    let editMode = false;
-
-    function refresh(){
-      const arr = yearObj[cat.key];
-      countSpan.textContent = cat.countLabel(arr);
-      list.innerHTML = '';
-
-      if(editMode && isOwner){
-        arr.forEach((item, idx)=>{
-          list.appendChild(makeEditRow(item, cat, String(idx+1), yearObj, countSpan, refresh));
-        });
-        const addRow = el('div','entry edit-row add-row-inline');
-        addRow.appendChild(el('div','idx',''));
-        const addBtn = el('button','cat-plus','+'); addBtn.type='button';
-        addBtn.addEventListener('click', ()=>{
-          const blank = { id:uid() };
-          cat.formFields.forEach(f=>{ blank[f.key] = ''; });
-          yearObj[cat.key].push(blank);
-          refresh();
-          const allInputs = list.querySelectorAll('.inline-input');
-          const perRow = cat.formFields.length;
-          const target = allInputs[(yearObj[cat.key].length - 1) * perRow];
-          if(target) target.focus();
-          saveData();
-        });
-        addRow.appendChild(addBtn);
-        list.appendChild(addRow);
-      } else {
-        arr.forEach((item, idx)=>{
-          const rf = cat.rowFields(item, idx);
-          list.appendChild(makeViewRow(item, cat, rf.idx, rf.parts));
-        });
-      }
-    }
-    refresh();
-
-    if(plusBtn){
-      plusBtn.addEventListener('click', ()=>{
-        editMode = !editMode;
-        refresh();
-      });
-    }
 
     return wrap;
   }
@@ -708,10 +325,6 @@
   }
 
   function renderAll(){
-    const themeSlot = document.getElementById('slot-theme');
-    if(themeSlot) themeSlot.innerHTML = '';
-    themeOpenFor = null;
-
     const sorted = [...data.years].sort((a,b)=> b.year - a.year);
 
     if(selectedYear === null || !sorted.some(y=>y.year===selectedYear)){
@@ -729,41 +342,9 @@
       sorted.forEach(y=>{
         const tab = el('button', 'tab' + (y.year===selectedYear ? ' active' : ''), String(y.year));
         tab.type = 'button';
-        tab.addEventListener('click', ()=>{
-          if(y.year === selectedYear){
-            if(isOwner) openThemeEditor(y);
-          } else {
-            selectedYear = y.year;
-            renderAll();
-          }
-        });
+        tab.addEventListener('click', ()=>{ selectedYear = y.year; renderAll(); });
         nav.appendChild(tab);
       });
-    }
-
-    const yearSlot = document.getElementById('slot-year');
-    yearSlot.innerHTML = '';
-    if(isOwner){
-      const yearPlus = el('button','tab-plus','+'); yearPlus.type='button';
-      nav.appendChild(yearPlus);
-      attachAddControl(yearPlus, yearSlot, [
-        {key:'year', label:'YEAR', required:true},
-        {key:'bg', label:'BG COLOR', type:'color'},
-        {key:'point', label:'POINT COLOR', type:'color'},
-      ], (vals)=>{
-        const yr = parseInt(vals.year, 10);
-        if(!yr || String(yr).length !== 4){ alert('Enter a 4-digit year.'); return; }
-        if(data.years.some(y=>y.year===yr)){ alert('That year already exists.'); return; }
-        data.years.push({
-          year:yr,
-          bg: vals.bg || '#F0EEE9',
-          point: vals.point || '#0E86C8',
-          albums:[], concerts:[], travels:[],
-        });
-        selectedYear = yr;
-        renderAll();
-        saveData();
-      }, { bg: (current && current.bg) || '#F0EEE9', point: (current && current.point) || '#0E86C8' });
     }
 
     const container = document.getElementById('years-container');
@@ -773,7 +354,6 @@
     }
   }
 
-  initGoogleAuth();
   loadData();
 })();
 </script>
