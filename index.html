@@ -98,6 +98,15 @@
   #slot-year{margin-bottom:22px;}
   #loadingMsg{font-size:var(--fs-ui);color:var(--ink-dim);}
 
+  body.loading{background:#ffffff;}
+  body.loading,
+  body.loading .terminal-intro,
+  body.loading .t-info,
+  body.loading .t-prompt,
+  body.loading .auth-row{color:#4a4a4a;}
+  body.loading .cursor{background:#4a4a4a;}
+  body.loading #loadingMsg{color:#000000;}
+
   .category{margin-bottom:24px;}
   .category:last-child{margin-bottom:0;}
 
@@ -249,7 +258,7 @@
   }
 </style>
 </head>
-<body>
+<body class="loading">
 <div class="page">
 
   <div class="auth-row" id="authRow">
@@ -326,6 +335,7 @@
     }
     document.getElementById('loadingMsg').style.display = 'none';
     document.getElementById('nav').style.display = '';
+    document.body.classList.remove('loading');
     renderAll();
   }
 
@@ -498,33 +508,36 @@
     const form = buildForm([
       {key:'bg', label:'BG COLOR', type:'color'},
       {key:'point', label:'POINT COLOR', type:'color'},
-    ], async (vals)=>{
+    ], (vals)=>{
       if(vals.bg) y.bg = vals.bg;
       if(vals.point) y.point = vals.point;
-      await saveData();
       themeOpenFor = null;
       slot.innerHTML = '';
       renderAll();
+      saveData();
     }, ()=>{ themeOpenFor = null; slot.innerHTML = ''; }, { bg:y.bg, point:y.point }, 'CLOSE');
     slot.innerHTML = '';
     slot.appendChild(form);
   }
 
-  function joinParts(container, parts, sepClass){
-    parts.forEach((p,i)=>{
+  function joinParts(container, parts){
+    const main = parts.slice(0, -1);
+    const note = parts[parts.length - 1];
+    main.forEach((p,i)=>{
       container.appendChild(el('span', p.cls, p.text));
-      if(i < parts.length-1){
-        const isLast = (i === parts.length-2);
-        container.appendChild(el('span', sepClass, isLast ? '*' : '—'));
-      }
+      if(i < main.length-1) container.appendChild(el('span','sep','—'));
     });
+    if(note && note.text && note.text.trim() !== ''){
+      if(main.length) container.appendChild(el('span','sep','*'));
+      container.appendChild(el('span', note.cls, note.text));
+    }
   }
 
   function makeViewRow(item, cat, idxLabel, parts){
     const row = el('div','entry');
     row.appendChild(el('div','idx', idxLabel));
     const body = el('div','body');
-    joinParts(body, parts, 'sep');
+    joinParts(body, parts);
     row.appendChild(body);
     return row;
   }
@@ -539,10 +552,10 @@
       input.className = 'inline-input';
       input.placeholder = spec.label;
       input.value = item[spec.key] || '';
-      input.addEventListener('change', async ()=>{
+      input.addEventListener('change', ()=>{
         item[spec.key] = input.value.trim();
-        await saveData();
         countSpan.textContent = cat.countLabel(yearObj[cat.key]);
+        saveData();
       });
       body.appendChild(input);
       if(i < cat.formFields.length-1){
@@ -552,10 +565,10 @@
     });
     row.appendChild(body);
     const del = el('button','del','[X]'); del.type='button';
-    del.addEventListener('click', async ()=>{
+    del.addEventListener('click', ()=>{
       yearObj[cat.key] = yearObj[cat.key].filter(x=>x.id!==item.id);
-      await saveData();
       onChanged();
+      saveData();
     });
     row.appendChild(del);
     return row;
@@ -570,7 +583,7 @@
         parts: [
           {cls:'primary', text:item.artist},
           {cls:'secondary', text:item.title},
-          {cls:'note', text:item.note || '—'},
+          {cls:'note', text:item.note || ''},
         ],
       }),
       formFields:[
@@ -590,7 +603,7 @@
         parts: [
           {cls:'primary', text:item.title},
           {cls:'secondary', text:item.artist},
-          {cls:'note', text:item.note || '—'},
+          {cls:'note', text:item.note || ''},
         ],
       }),
       formFields:[
@@ -607,7 +620,7 @@
         idx: item.period || '--',
         parts: [
           {cls:'primary', text:item.location},
-          {cls:'note', text:item.note || '—'},
+          {cls:'note', text:item.note || ''},
         ],
       }),
       formFields:[
@@ -653,16 +666,16 @@
         const addRow = el('div','entry edit-row add-row-inline');
         addRow.appendChild(el('div','idx',''));
         const addBtn = el('button','cat-plus','+'); addBtn.type='button';
-        addBtn.addEventListener('click', async ()=>{
+        addBtn.addEventListener('click', ()=>{
           const blank = { id:uid() };
           cat.formFields.forEach(f=>{ blank[f.key] = ''; });
           yearObj[cat.key].push(blank);
-          await saveData();
           refresh();
           const allInputs = list.querySelectorAll('.inline-input');
           const perRow = cat.formFields.length;
           const target = allInputs[(yearObj[cat.key].length - 1) * perRow];
           if(target) target.focus();
+          saveData();
         });
         addRow.appendChild(addBtn);
         list.appendChild(addRow);
@@ -737,7 +750,7 @@
         {key:'year', label:'YEAR', required:true},
         {key:'bg', label:'BG COLOR', type:'color'},
         {key:'point', label:'POINT COLOR', type:'color'},
-      ], async (vals)=>{
+      ], (vals)=>{
         const yr = parseInt(vals.year, 10);
         if(!yr || String(yr).length !== 4){ alert('Enter a 4-digit year.'); return; }
         if(data.years.some(y=>y.year===yr)){ alert('That year already exists.'); return; }
@@ -748,7 +761,8 @@
           albums:[], concerts:[], travels:[],
         });
         selectedYear = yr;
-        await saveData(); renderAll();
+        renderAll();
+        saveData();
       }, { bg: (current && current.bg) || '#F0EEE9', point: (current && current.point) || '#0E86C8' });
     }
 
