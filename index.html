@@ -271,10 +271,7 @@
     },
     {
       key:'concerts', tag:'[02] CONCERTS',
-      countLabel: arr => {
-        const artists = new Set(arr.map(c=>c.artist).filter(Boolean)).size;
-        return arr.length + ' SHOWS · ' + artists + ' ARTISTS';
-      },
+      countLabel: arr => arr.length + ' SHOWS',
       rowFields: (item) => ({
         idx: item.date || '--',
         parts: [
