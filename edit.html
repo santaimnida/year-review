@@ -184,6 +184,30 @@
   .del:hover{color:var(--ink);}
   .del:focus-visible{color:var(--ink);outline:1px solid var(--ink);}
 
+  .row-actions{display:flex;align-items:baseline;gap:6px;flex-shrink:0;}
+  .drag-handle{
+    background:none;
+    border:none;
+    font-family:inherit;
+    color:var(--ink-dim);
+    cursor:grab;
+    font-size:var(--fs-primary);
+    padding:0 2px;
+    flex-shrink:0;
+    touch-action:none;
+    user-select:none;
+    -webkit-user-select:none;
+  }
+  .drag-handle:hover{color:var(--ink);}
+  .drag-handle:active{cursor:grabbing;}
+  .entry.edit-row.dragging{
+    background:var(--panel);
+    box-shadow:0 3px 10px rgba(0,0,0,0.18);
+    border-radius:3px;
+    position:relative;
+    z-index:20;
+  }
+
   .edit-body{
     display:flex;
     align-items:baseline;
@@ -549,8 +573,89 @@
     return row;
   }
 
-  function makeEditRow(item, cat, idxLabel, yearObj, countSpan, onChanged){
+  function attachDragReorder(handle, row, list, yearObj, cat, item, onChanged){
+    let pressTimer = null;
+    let dragging = false;
+    let startY = 0;
+    let startIndex = 0;
+
+    function clearPressTimer(){
+      if(pressTimer){ clearTimeout(pressTimer); pressTimer = null; }
+    }
+
+    function onPreMove(e){
+      if(Math.abs(e.clientY - startY) > 8) cleanupPre();
+    }
+    function cleanupPre(){
+      clearPressTimer();
+      handle.removeEventListener('pointermove', onPreMove);
+      handle.removeEventListener('pointerup', cleanupPre);
+      handle.removeEventListener('pointercancel', cleanupPre);
+    }
+
+    function onPointerDown(e){
+      if(e.pointerType === 'mouse' && e.button !== 0) return;
+      startY = e.clientY;
+      clearPressTimer();
+      pressTimer = setTimeout(()=> beginDrag(e), 350);
+      handle.addEventListener('pointermove', onPreMove);
+      handle.addEventListener('pointerup', cleanupPre);
+      handle.addEventListener('pointercancel', cleanupPre);
+    }
+
+    function beginDrag(e){
+      cleanupPre();
+      dragging = true;
+      startY = e.clientY;
+      const rows = Array.from(list.querySelectorAll('.edit-row:not(.add-row-inline)'));
+      startIndex = rows.indexOf(row);
+      row.classList.add('dragging');
+      document.addEventListener('pointermove', onDragMove);
+      document.addEventListener('pointerup', onDragEnd);
+      document.addEventListener('pointercancel', onDragEnd);
+    }
+
+    function onDragMove(e){
+      if(!dragging) return;
+      row.style.transform = 'translateY(' + (e.clientY - startY) + 'px)';
+    }
+
+    function onDragEnd(e){
+      if(!dragging) return;
+      dragging = false;
+      document.removeEventListener('pointermove', onDragMove);
+      document.removeEventListener('pointerup', onDragEnd);
+      document.removeEventListener('pointercancel', onDragEnd);
+
+      const draggedRect = row.getBoundingClientRect();
+      const draggedCenter = draggedRect.top + draggedRect.height / 2;
+      row.classList.remove('dragging');
+      row.style.transform = '';
+
+      const others = Array.from(list.querySelectorAll('.edit-row:not(.add-row-inline)')).filter(r => r !== row);
+      let newIndex = others.length;
+      for(let i=0;i<others.length;i++){
+        const r = others[i].getBoundingClientRect();
+        if(draggedCenter < r.top + r.height/2){ newIndex = i; break; }
+      }
+
+      if(newIndex !== startIndex){
+        const arr = yearObj[cat.key];
+        const fromIndex = arr.findIndex(x => x.id === item.id);
+        const [moved] = arr.splice(fromIndex, 1);
+        arr.splice(newIndex, 0, moved);
+        onChanged();
+        saveData();
+      }
+    }
+
+    handle.addEventListener('pointerdown', onPointerDown);
+  }
+
+  function makeEditRow(item, cat, idxLabel, yearObj, countSpan, onChanged, idx, total, list){
     const row = el('div','entry edit-row');
+    const handle = el('button','drag-handle','⠿'); handle.type='button';
+    row.appendChild(handle);
     row.appendChild(el('div','idx', idxLabel));
     const body = el('div','body edit-body');
     cat.formFields.forEach((spec, i)=>{
@@ -571,6 +676,7 @@
       }
     });
     row.appendChild(body);
+
     const del = el('button','del','[X]'); del.type='button';
     del.addEventListener('click', ()=>{
       yearObj[cat.key] = yearObj[cat.key].filter(x=>x.id!==item.id);
@@ -578,6 +684,8 @@
       saveData();
     });
     row.appendChild(del);
+
+    attachDragReorder(handle, row, list, yearObj, cat, item, onChanged);
     return row;
   }
 
@@ -665,7 +773,7 @@
 
       if(editMode && isOwner){
         arr.forEach((item, idx)=>{
-          list.appendChild(makeEditRow(item, cat, String(idx+1), yearObj, countSpan, refresh));
+          list.appendChild(makeEditRow(item, cat, String(idx+1), yearObj, countSpan, refresh, idx, arr.length, list));
         });
         const addRow = el('div','entry edit-row add-row-inline');
         addRow.appendChild(el('div','idx',''));
