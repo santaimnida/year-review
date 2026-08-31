@@ -130,6 +130,8 @@
   .entry .sep{color:var(--ink-faint);padding:0 6px;}
   .entry .secondary{font-weight:400;}
   .entry .note{font-size:var(--fs-note);color:var(--ink-dim);}
+  .answer{text-decoration:underline;text-underline-offset:2px;}
+  .single-body{padding:2px 0;min-height:1.4em;}
 
   footer{
     margin-top:48px;
@@ -189,8 +191,13 @@
     d.years.forEach(y=>{
       if(!y.bg) y.bg = '#F0EEE9';
       if(!y.point) y.point = '#0E86C8';
+      y.movie = y.movie || '';
+      y.book = y.book || '';
+      y.sentence = y.sentence || '';
       y.albums = y.albums || [];
-      y.concerts = y.concerts || [];
+      y.playlist = y.playlist || '';
+      y.concertAnswers = y.concertAnswers || [];
+      while(y.concertAnswers.length < 10) y.concertAnswers.push('');
       y.travels = y.travels || [];
     });
     return d;
@@ -256,9 +263,25 @@
     return row;
   }
 
+  const CONCERT_QUESTIONS = [
+    '올해 총 공연에 간 횟수 (예정 포함)',
+    '올해 총 공연에 쓴 돈',
+    '가장 재밌게 본 공연',
+    '가장 많이 관람한 아티스트',
+    '가장 많이 방문한 공연장',
+    '올해의 도전',
+    '작년 목표를 달성했는가',
+    '내년 목표',
+    '내년에 보는 첫 공연',
+    '공연 총 후기',
+  ];
+
   const CATEGORIES = [
+    { type:'single', key:'movie', tag:'[올해의 영화]' },
+    { type:'single', key:'book', tag:'[올해의 도서]' },
+    { type:'single', key:'sentence', tag:'[올해의 문장]' },
     {
-      key:'albums', tag:'[01] ALBUMS',
+      type:'list', key:'albums', tag:'[올해의 노래]',
       countLabel: arr => arr.length + ' TRACKS',
       rowFields: (item, idx) => ({
         idx: String(idx+1).padStart(2,'0'),
@@ -269,20 +292,10 @@
         ],
       }),
     },
+    { type:'single', key:'playlist', tag:'[올해의 플레이리스트]' },
+    { type:'survey', key:'concertAnswers', tag:'[올해의 공연]', questions: CONCERT_QUESTIONS },
     {
-      key:'concerts', tag:'[02] CONCERTS',
-      countLabel: arr => arr.length + ' SHOWS',
-      rowFields: (item) => ({
-        idx: item.date || '--',
-        parts: [
-          {cls:'primary', text:item.title},
-          {cls:'secondary', text:item.artist},
-          {cls:'note', text:item.note || ''},
-        ],
-      }),
-    },
-    {
-      key:'travels', tag:'[03] TRAVEL',
+      type:'list', key:'travels', tag:'[올해의 여행]',
       countLabel: arr => arr.length + ' TRIPS',
       rowFields: (item) => ({
         idx: item.period || '--',
@@ -295,6 +308,51 @@
   ];
 
   function buildCategoryBlock(yearObj, cat){
+    if(cat.type === 'single') return buildSingleCategory(yearObj, cat);
+    if(cat.type === 'survey') return buildSurveyCategory(yearObj, cat);
+    return buildListCategory(yearObj, cat);
+  }
+
+  function buildSingleCategory(yearObj, cat){
+    const wrap = el('div','category');
+    const head = el('div','sec-head');
+    head.appendChild(el('span','tag', cat.tag));
+    wrap.appendChild(head);
+
+    const body = el('div','single-body');
+    const val = yearObj[cat.key];
+    if(val && val.trim() !== ''){
+      body.appendChild(el('span','answer', val));
+    }
+    wrap.appendChild(body);
+    return wrap;
+  }
+
+  function buildSurveyCategory(yearObj, cat){
+    const wrap = el('div','category');
+    const head = el('div','sec-head');
+    head.appendChild(el('span','tag', cat.tag));
+    wrap.appendChild(head);
+
+    const list = el('div','list');
+    const answers = yearObj[cat.key];
+    cat.questions.forEach((q, i)=>{
+      const row = el('div','entry');
+      row.appendChild(el('div','idx', String(i+1).padStart(2,'0')));
+      const body = el('div','body');
+      body.appendChild(el('span', null, q));
+      if(answers[i] && answers[i].trim() !== ''){
+        body.appendChild(el('span','sep','—'));
+        body.appendChild(el('span','answer', answers[i]));
+      }
+      row.appendChild(body);
+      list.appendChild(row);
+    });
+    wrap.appendChild(list);
+    return wrap;
+  }
+
+  function buildListCategory(yearObj, cat){
     const wrap = el('div','category');
     const head = el('div','sec-head');
     head.appendChild(el('span','tag', cat.tag));
