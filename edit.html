@@ -171,7 +171,7 @@
   .entry .sep{color:var(--ink-faint);padding:0 6px;}
   .entry .secondary{font-weight:400;}
   .entry .note{font-size:var(--fs-note);color:var(--ink-dim);}
-  .answer{text-decoration:underline;text-underline-offset:2px;}
+  .answer{}
   .single-body{padding:2px 0;min-height:1.4em;}
   .del{
     font-size:var(--fs-note);
@@ -346,10 +346,10 @@
       y.book = y.book || '';
       y.sentence = y.sentence || '';
       y.albums = y.albums || [];
-      y.playlist = y.playlist || '';
       y.concertAnswers = y.concertAnswers || [];
       while(y.concertAnswers.length < 10) y.concertAnswers.push('');
       y.travels = y.travels || [];
+      y.achievements = y.achievements || [];
     });
     return d;
   }
@@ -730,7 +730,6 @@
         {key:'note', label:'NOTE'},
       ],
     },
-    { type:'single', key:'playlist', tag:'[올해의 플레이리스트]' },
     { type:'survey', key:'concertAnswers', tag:'[올해의 공연]', questions: CONCERT_QUESTIONS },
     {
       type:'list', key:'travels', tag:'[올해의 여행]',
@@ -746,6 +745,19 @@
         {key:'period', label:'PERIOD (MM.DD - MM.DD)'},
         {key:'location', label:'LOCATION'},
         {key:'note', label:'NOTE'},
+      ],
+    },
+    {
+      type:'list', key:'achievements', tag:'[올해 새로 이룬 것]',
+      countLabel: arr => arr.length + ' ITEMS',
+      rowFields: (item, idx) => ({
+        idx: String(idx+1).padStart(2,'0'),
+        parts: [
+          {cls:'primary', text:item.text},
+        ],
+      }),
+      formFields:[
+        {key:'text', label:'TEXT'},
       ],
     },
   ];
@@ -986,9 +998,10 @@
           bg: vals.bg || '#F0EEE9',
           point: vals.point || '#0E86C8',
           movie:'', book:'', sentence:'',
-          albums:[], playlist:'',
+          albums:[],
           concertAnswers:new Array(10).fill(''),
           travels:[],
+          achievements:[],
         });
         selectedYear = yr;
         renderAll();
